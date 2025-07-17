@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kids School Voting</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .vote-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .vote-button {
+      width: 200px;
+      height: 150px;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #ccc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vote-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .vote-button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .selected {
+      outline: 4px solid black;
+    }
+
+    #submit-btn, #admin-panel button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    #admin-login {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    #admin-panel {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .upload-input {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vote for Your Favorite!</h1>
+  <div class="vote-container">
+    <div>
+      <button class="vote-button" data-id="green"><span>Green - Alice</span><img /></button>
+      <input type="file" class="upload-input" data-id="green" accept="image/*">
+    </div>
+    <div>
+      <button class="vote-button" data-id="red"><span>Red - Bob</span><img /></button>
+      <input type="file" class="upload-input" data-id="red" accept="image/*">
+    </div>
+    <div>
+      <button class="vote-button" data-id="blue"><span>Blue - Charlie</span><img /></button>
+      <input type="file" class="upload-input" data-id="blue" accept="image/*">
+    </div>
+    <button id="submit-btn">Submit Vote</button>
+    <div id="result"></div>
+  </div>
+
+  <div id="admin-login">
+    <input type="password" id="admin-pass" placeholder="Enter Admin Passcode" />
+    <button onclick="verifyAdmin()">Login</button>
+  </div>
+
+  <div id="admin-panel">
+    <h3>Admin Panel</h3>
+    <p id="vote-totals"></p>
+    <button onclick="resetVotes()">Reset Votes</button>
+  </div>
+
+  <script>
+    const voteButtons = document.querySelectorAll('.vote-button');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultDiv = document.getElementById('result');
+    const adminLogin = document.getElementById('admin-login');
+    const adminPanel = document.getElementById('admin-panel');
+    const adminPass = document.getElementById('admin-pass');
+    const voteTotals = document.getElementById('vote-totals');
+    const uploadInputs = document.querySelectorAll('.upload-input');
+
+    let voteCounts = JSON.parse(localStorage.getItem('voteCounts')) || {
+      green: 0, red: 0, blue: 0
+    };
+
+    function updateImages() {
+      voteButtons.forEach(btn => {
+        const id = btn.dataset.id;
+        const imgData = localStorage.getItem('img-' + id);
+        if (imgData) {
+          btn.querySelector('img').src = imgData;
+        }
+      });
+    }
+
+    uploadInputs.forEach(input => {
+      input.addEventListener('change', (e) => {
+        const id = e.target.dataset.id;
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          localStorage.setItem('img-' + id, reader.result);
+          updateImages();
+        };
+        if (file) reader.readAsDataURL(file);
+      });
+    });
+
+    voteButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+      });
+    });
+
+    submitBtn.addEventListener('click', () => {
+      const selected = document.querySelectorAll('.vote-button.selected');
+      if (selected.length === 1) {
+        const id = selected[0].dataset.id;
+        voteCounts[id]++;
+        localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+        resultDiv.innerText = `Vote for ${id.toUpperCase()} recorded! ✅`;
+      } else {
+        resultDiv.innerText = `Invalid vote. ❌`;
+      }
+      voteButtons.forEach(btn => btn.classList.remove('selected'));
+      setTimeout(() => resultDiv.innerText = '', 2000);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+        adminLogin.style.display = 'flex';
+      }
+    });
+
+    function verifyAdmin() {
+      if (adminPass.value === "rej@123") {
+        adminPanel.style.display = 'block';
+        adminLogin.style.display = 'none';
+        showVoteCounts();
+      } else {
+        alert("Wrong passcode!");
+      }
+    }
+
+    function showVoteCounts() {
+      voteTotals.innerText =
+        `🟢 Green: ${voteCounts.green}
+🔴 Red: ${voteCounts.red}
+🔵 Blue: ${voteCounts.blue}`;
+    }
+
+    function resetVotes() {
+      voteCounts = { green: 0, red: 0, blue: 0 };
+      localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+      alert("Votes have been reset!");
+      showVoteCounts();
+    }
+
+    updateImages();
+  </script>
+</body>
+</html>
