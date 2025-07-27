@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,27 +29,28 @@
     }
 
     .vote-button {
-      width: 200px;
-      height: 150px;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       cursor: pointer;
-      background-color: #ccc;
+      background-color: #070d5e; /* Default dark blue */
       position: relative;
-      overflow: hidden;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      transition: transform 0.2s, filter 0.2s, background-color 0.2s, opacity 0.2s;
     }
 
-    .vote-button img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      opacity: 0.5;
+    .vote-button:hover:not(.voted):not(.disabled-temp) {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .hidden {
+      display: none;
     }
 
     .vote-button span {
@@ -58,11 +58,18 @@
       z-index: 1;
     }
 
-    .selected {
+    /* Style for the temporarily voted button (light blue) */
+    .voted-temp {
+      background-color: rgb(61, 41, 243); /* Light blue for voted state */
       outline: 4px solid black;
     }
 
-    #submit-btn, #admin-panel button {
+    .disabled-temp {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    #admin-panel button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 16px;
@@ -71,11 +78,14 @@
       background-color: #333;
       color: white;
       cursor: pointer;
+      margin-left: 10px;
     }
 
     #result {
       margin-top: 20px;
       font-size: 16px;
+      color: green;
+      font-weight: bold;
     }
 
     #admin-login {
@@ -83,34 +93,113 @@
       flex-direction: column;
       align-items: center;
       margin-top: 20px;
+      gap: 10px;
     }
 
     #admin-panel {
       display: none;
       margin-top: 30px;
+      text-align: center;
     }
 
     .upload-input {
       margin-top: 5px;
+    }
+
+    .img-div{
+      height: 100px;
+      width: 90%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    img{
+      height: 100px;
+      width: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    .indicator{
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      background-color: #F77878; /* Default light red/coral indicator */
+      margin-right: 10px;
+      transition: background-color 0.3s;
+    }
+    .indicator-active {
+        background-color: darkred; /* Dark red for active indicator */
+    }
+    .inner-div{
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .inner-div h3 {
+      margin: 0;
+      flex-grow: 1;
+    }
+    .img-div input[type="file"] {
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Vote for Your Favorite!</h1>
   <div class="vote-container">
-    <div>
-      <button class="vote-button" data-id="green"><span>Green - Alice</span><img /></button>
-      <input type="file" class="upload-input" data-id="green" accept="image/*">
+    <div class="img-div">
+      <div class="inner-div">
+        <input type="file" class="upload-input hidden" data-id="Ali" accept="image/*">
+        <img class="candidateImage" src="./Images/Ali.jpeg" alt="Ali">
+        <h3>Ali Bin Haris</h3>
+      </div>
+      <div class="indicator" id="indicator-Ali"></div>
+      <button class="vote-button" data-id="Ali"></button>
     </div>
-    <div>
-      <button class="vote-button" data-id="red"><span>Red - Bob</span><img /></button>
-      <input type="file" class="upload-input" data-id="red" accept="image/*">
+    <div class="img-div">
+      <div class="inner-div">
+        <input type="file" class="upload-input hidden" data-id="Adil" accept="image/*">
+        <img class="candidateImage" src="./Images/Adil.jpeg" alt="Adil">
+        <h3>Adil Muhamed Ashraf</h3>
+      </div>
+      <div class="indicator" id="indicator-Adil"></div>
+      <button class="vote-button" data-id="Adil"></button>
     </div>
-    <div>
-      <button class="vote-button" data-id="blue"><span>Blue - Charlie</span><img /></button>
-      <input type="file" class="upload-input" data-id="blue" accept="image/*">
+    <div class="img-div">
+      <div class="inner-div">
+        <input type="file" class="upload-input hidden" data-id="Fidha" accept="image/*">
+        <img class="candidateImage" src="./Images/Fidha.jpeg" alt="Fidha">
+        <h3>Ayisha Fidha</h3>
+      </div>
+      <div class="indicator" id="indicator-Fidha"></div>
+      <button class="vote-button" data-id="Fidha"></button>
     </div>
-    <button id="submit-btn">Submit Vote</button>
+    <div class="img-div">
+      <div class="inner-div">
+        <input type="file" class="upload-input hidden" data-id="Sivani" accept="image/*">
+        <img class="candidateImage" src="./Images/Sivani.jpeg" alt="Sivani">
+        <h3>Sivani</h3>
+      </div>
+      <div class="indicator" id="indicator-Sivani"></div>
+      <button class="vote-button" data-id="Sivani"></button>
+    </div>
+    <div class="img-div">
+      <div class="inner-div">
+        <input type="file" class="upload-input hidden" data-id="Riza" accept="image/*">
+        <img class="candidateImage" src="./Images/Riza.jpeg" alt="Riza">
+        <h3>Fathima Riza</h3>
+      </div>
+      <div class="indicator" id="indicator-Riza"></div>
+      <button class="vote-button" data-id="Riza"></button>
+    </div>
+
     <div id="result"></div>
   </div>
 
@@ -122,96 +211,208 @@
   <div id="admin-panel">
     <h3>Admin Panel</h3>
     <p id="vote-totals"></p>
-    <button onclick="resetVotes()">Reset Votes</button>
+    <button onclick="confirmResetVotes()">Reset Votes</button> <button onclick="adminLogout()">Logout</button>
+    <p id="reset-timer" style="color:red;"></p>
   </div>
 
   <script>
     const voteButtons = document.querySelectorAll('.vote-button');
-    const submitBtn = document.getElementById('submit-btn');
     const resultDiv = document.getElementById('result');
     const adminLogin = document.getElementById('admin-login');
     const adminPanel = document.getElementById('admin-panel');
     const adminPass = document.getElementById('admin-pass');
     const voteTotals = document.getElementById('vote-totals');
     const uploadInputs = document.querySelectorAll('.upload-input');
+    const candidateImages = document.querySelectorAll('.candidateImage');
+    const indicators = document.querySelectorAll('.indicator');
+    const resetTimer = document.getElementById('reset-timer');
 
     let voteCounts = JSON.parse(localStorage.getItem('voteCounts')) || {
-      green: 0, red: 0, blue: 0
+      Ali: 0, Adil: 0, Fidha: 0, Sivani: 0, Riza: 0
     };
 
+    // Create an audio element for the click sound
+    const clickSound = new Audio('./Sound/beep-125033.mp3')
+
+    // Function to update candidate images from local storage
     function updateImages() {
-      voteButtons.forEach(btn => {
-        const id = btn.dataset.id;
+      candidateImages.forEach(img => {
+        const id = img.closest('.img-div').querySelector('.upload-input').dataset.id;
         const imgData = localStorage.getItem('img-' + id);
         if (imgData) {
-          btn.querySelector('img').src = imgData;
+          img.src = imgData;
         }
       });
     }
 
+    // Function to resize image before storing
+    function resizeImage(file, maxSize, callback) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
+
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          callback(dataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Event listeners for image upload inputs
     uploadInputs.forEach(input => {
       input.addEventListener('change', (e) => {
         const id = e.target.dataset.id;
         const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          localStorage.setItem('img-' + id, reader.result);
-          updateImages();
-        };
-        if (file) reader.readAsDataURL(file);
+        if (!file) return;
+
+        resizeImage(file, 300, (resizedDataUrl) => {
+          try {
+            localStorage.setItem('img-' + id, resizedDataUrl);
+            updateImages();
+            input.classList.add('hidden');
+          } catch (err) {
+            alert("Image too large. Please choose a smaller image.");
+            console.error(err);
+          }
+        });
       });
     });
 
+    // Event listeners for vote buttons
     voteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        btn.classList.toggle('selected');
+        const id = btn.dataset.id;
+        voteCounts[id]++;
+        localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+
+        // Play sound
+        clickSound.currentTime = 0; // Rewind to start if already playing
+        clickSound.play();
+
+        // Temporarily disable all buttons and dim them
+        voteButtons.forEach(button => {
+          button.disabled = true;
+          button.classList.add('disabled-temp');
+          // Reset all indicators and voted states
+          document.getElementById(`indicator-${button.dataset.id}`).classList.remove('indicator-active');
+          button.classList.remove('voted-temp');
+        });
+
+        // Apply temporary voted style to the clicked button and activate its indicator
+        btn.classList.add('voted-temp'); // New class for light blue
+        document.getElementById(`indicator-${id}`).classList.add('indicator-active'); // New class for dark red indicator
+
+        resultDiv.innerText = `Vote recorded! ✅`;
+
+        // Re-enable buttons and remove dimming/temporary styles after 2 seconds
+        setTimeout(() => {
+          voteButtons.forEach(button => {
+            button.disabled = false; // Re-enable the button
+            button.classList.remove('disabled-temp'); // Remove temporary disabled state
+            button.classList.remove('voted-temp'); // Remove light blue background
+            document.getElementById(`indicator-${button.dataset.id}`).classList.remove('indicator-active'); // Reset indicator color
+          });
+          resultDiv.innerText = ''; // Clear message
+        }, 2000);
       });
     });
 
-    submitBtn.addEventListener('click', () => {
-      const selected = document.querySelectorAll('.vote-button.selected');
-      if (selected.length === 1) {
-        const id = selected[0].dataset.id;
-        voteCounts[id]++;
-        localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
-        resultDiv.innerText = `Vote for ${id.toUpperCase()} recorded! ✅`;
-      } else {
-        resultDiv.innerText = `Invalid vote. ❌`;
-      }
-      voteButtons.forEach(btn => btn.classList.remove('selected'));
-      setTimeout(() => resultDiv.innerText = '', 2000);
-    });
-
+    // Admin login and panel functions
     document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
-        adminLogin.style.display = 'flex';
+      if (e.ctrlKey) {
+        if (e.key.toLowerCase() === 'a') {
+          adminLogin.style.display = 'flex';
+        } else if (e.key.toLowerCase() === 'i') {
+          uploadInputs.forEach(input => {
+            input.classList.toggle('hidden');
+          });
+        }
       }
     });
 
     function verifyAdmin() {
-      if (adminPass.value === "rej@123") {
+      if (adminPass.value === "des@25") {
         adminPanel.style.display = 'block';
         adminLogin.style.display = 'none';
         showVoteCounts();
       } else {
         alert("Wrong passcode!");
+        adminPass.value = ''; // Clear password on wrong attempt
       }
     }
 
     function showVoteCounts() {
-      voteTotals.innerText =
-        `🟢 Green: ${voteCounts.green}
-🔴 Red: ${voteCounts.red}
-🔵 Blue: ${voteCounts.blue}`;
+      let totalsText = '';
+      for (const candidate in voteCounts) {
+        totalsText += `${candidate}: ${voteCounts[candidate]}<br>`;
+      }
+      voteTotals.innerHTML = totalsText;
     }
 
+    // Function to confirm reset
+    function confirmResetVotes() {
+      const confirmation = confirm("Are you sure you want to reset all votes? This action cannot be undo.");
+      if (confirmation) {
+        resetVotes(); // Proceed with reset if confirmed
+      }
+    }
+
+    // Actual reset function
     function resetVotes() {
-      voteCounts = { green: 0, red: 0, blue: 0 };
+      voteCounts = {
+        Ali: 0, Adil: 0,
+        Fidha: 0, Sivani: 0,
+        Riza: 0
+      };
       localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
-      alert("Votes have been reset!");
       showVoteCounts();
+      resultDiv.innerText = ''; // Clear any previous vote messages
+
+      // Re-enable vote buttons and reset their styles
+      voteButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('voted-temp'); /* Remove new temp class */
+        btn.classList.remove('disabled-temp');
+      });
+      indicators.forEach(indicator => {
+        indicator.classList.remove('indicator-active'); /* Remove new active class */
+        // Set default color directly in JS for clarity since CSS default is also set.
+        indicator.style.backgroundColor = '#F77878';
+      });
+
     }
 
+    function adminLogout() {
+      adminPanel.style.display = 'none';
+      adminLogin.style.display = 'none';
+      adminPass.value = '';
+      resetTimer.innerText = '';
+    }
+
+    // Initialize on page load
     updateImages();
   </script>
 </body>
