@@ -367,7 +367,7 @@
     function verifyAdmin() {
       if (adminPass.value === "des@25") {
         adminPanel.style.display = 'block';
-        adminLogin.style.display = 'none';
+        //adminLogin.style.display = 'none';
         showVoteCounts();
       } else {
         alert("Wrong passcode!");
@@ -419,7 +419,7 @@
     function adminLogout() {
       adminPanel.style.display = 'none';
       //adminLogin.style.display = 'none';
-      //adminPass.value = '';
+      adminPass.value = '';
       resetTimer.innerText = '';
     }
 
