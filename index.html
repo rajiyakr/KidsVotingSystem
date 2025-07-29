@@ -89,7 +89,7 @@
     }
 
     #admin-login {
-      display: none;
+      
       flex-direction: column;
       align-items: center;
       margin-top: 20px;
@@ -224,8 +224,7 @@
     <button onclick="confirmResetVotes()">Reset Votes</button> <button onclick="adminLogout()">Logout</button>
     <p id="reset-timer" style="color:red;"></p>
   </div>
-  <label for="input">Input</label>
-  <input type="text">
+  
 
   <script>
     const voteButtons = document.querySelectorAll('.vote-button');
@@ -419,8 +418,8 @@
 
     function adminLogout() {
       adminPanel.style.display = 'none';
-      adminLogin.style.display = 'none';
-      adminPass.value = '';
+      //adminLogin.style.display = 'none';
+      //adminPass.value = '';
       resetTimer.innerText = '';
     }
 
